@@ -1,9 +1,4 @@
-import {
-  MigrationInterface,
-  QueryRunner,
-  Table,
-  TableForeignKey,
-} from 'typeorm';
+import { MigrationInterface, QueryRunner, Table } from 'typeorm';
 
 export default class CreateOrdersProducts1611376934512
   implements MigrationInterface {
@@ -18,16 +13,6 @@ export default class CreateOrdersProducts1611376934512
             isPrimary: true,
             generationStrategy: 'uuid',
             default: 'uuid_generate_v4()',
-          },
-          {
-            name: 'product_id',
-            type: 'uuid',
-            isNullable: true,
-          },
-          {
-            name: 'order_id',
-            type: 'uuid',
-            isNullable: true,
           },
           {
             name: 'price',
@@ -54,35 +39,9 @@ export default class CreateOrdersProducts1611376934512
         ],
       }),
     );
-
-    await queryRunner.createForeignKey(
-      'orders_products',
-      new TableForeignKey({
-        name: 'OrdersProductsProduct',
-        columnNames: ['product_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'products',
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-      }),
-    );
-
-    await queryRunner.createForeignKey(
-      'orders_products',
-      new TableForeignKey({
-        name: 'OrdersProductsOrder',
-        columnNames: ['order_id'],
-        referencedColumnNames: ['id'],
-        referencedTableName: 'orders',
-        onDelete: 'SET NULL',
-        onUpdate: 'CASCADE',
-      }),
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    queryRunner.dropForeignKey('orders_products', 'OrdersProductsProduct');
-    queryRunner.dropForeignKey('orders_products', 'OrdersProductsOrder');
     queryRunner.dropTable('orders_products');
   }
 }
